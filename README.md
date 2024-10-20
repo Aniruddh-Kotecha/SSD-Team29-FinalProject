@@ -32,6 +32,40 @@ This project aims to develop a natural language prediction model for text autoco
 
   [Install Pip in Windows](https://www.geeksforgeeks.org/how-to-install-pip-on-windows/)
 
+### Jupyter Notebook
+
+**Linux**
+
+- Create a Conda environment
+
+  ```
+  conda create --name lstm python=3.8
+  ```
+
+- Activate the Conda environment
+
+  ```
+  conda activate lstm_env
+  ```
+
+- Install necessary libraries
+
+  ```
+  pip install numpy pandas tensorflow keras matplotlib scikit-learn
+  ```
+
+- Install Jupyter Notebook inside the Conda environment (if not already installed)
+
+  ```
+  conda install -c conda-forge notebook
+  ```
+
+- Launch Jupyter Notebook
+
+  ```
+  jupyter notebook
+  ```
+
 ## Project Structure
 
 - `data/`: Contains the text corpus and processed datasets
@@ -42,7 +76,7 @@ This project aims to develop a natural language prediction model for text autoco
 
 ## Setup
 
-1. Install Anaconda or Miniconda from https://docs.conda.io/en/latest/miniconda.html
+1. Install Anaconda or Miniconda [here](https://docs.conda.io/en/latest/miniconda.html)
 
 2. Clone the repository:
 
