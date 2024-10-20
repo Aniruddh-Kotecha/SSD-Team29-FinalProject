@@ -1,0 +1,10 @@
+
+# Conda
+.conda/
+*.conda
+
+# Conda environment files
+environment.yml
+
+# Jupyter Notebook
+.ipynb_checkpoints
