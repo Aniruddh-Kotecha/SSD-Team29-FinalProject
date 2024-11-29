@@ -1,109 +1,154 @@
-# Natural Language Prediction Model
+# Python Code Tokenization and Next Word Prediction
 
-This project aims to develop a natural language prediction model for text autocompletion using LSTM/RNN architectures.
+## Overview
 
-## Pre-requisites
+This project focuses on building a deep learning-based next-word prediction system for Python code using an LSTM (Long Short-Term Memory) neural network and GRU (Gated Recurrent Unit). The pipeline involves tokenizing Python scripts, converting tokens to numerical IDs, and training an LSTM-based recurrent neural network to predict the next token in a given sequence.
 
-### Python
+## Project Workflow
 
-- Check if python already exists
+### 1. Tokenization
 
-  ```
-  python3 --version or python --version
-  ```
+The project uses the Python tokenize library to parse Python code into tokens:
 
-- If not, use the following link
+- `tokenize_file`: Tokenizes a single Python file, removing comments and empty lines.
+- `tokenize_directory`: Tokenizes all Python files in a specified directory.
 
-  [Install Python on Linux](https://www.geeksforgeeks.org/how-to-install-python-on-linux/)
+### 2. Vocabulary Creation
 
-  [Install Python on Windows](https://www.python.org/downloads/)
+A vocabulary is built from all unique tokens found in the tokenized dataset. Each token is assigned a unique integer ID for use as input to the model.
 
-### Pip
+### 3. Sequence Preparation
 
-- Check if python already exists
+Input-output pairs are created:
 
-  ```
-  pip --version
-  ```
+- Input: A sequence of token IDs of fixed length
+- Output: The next token ID
 
-- If not, use the following link
+**Example:**
+Input: `[for, i, in, range]` → Output: `:`
 
-  [Install Pip on Linux](https://www.geeksforgeeks.org/how-to-install-pip-in-ubuntu/)
+### 4. LSTM Model
 
-  [Install Pip in Windows](https://www.geeksforgeeks.org/how-to-install-pip-on-windows/)
+The model architecture includes:
 
-### Jupyter Notebook
+- Embedding layer: Converts token IDs to dense vector representations
+- Two LSTM layers: Capture sequential patterns in token sequences
+- Dropout layer: Prevents overfitting
+- Dense layer: Outputs the next token probability distribution using a softmax activation
 
-**Linux**
+## Functions
 
-- Create a Conda environment
+- `tokenize_file(file_path)`: Tokenizes a single Python file, filtering out unnecessary tokens (e.g., comments, empty lines)
+- `tokenize_directory(directory_path)`: Processes all Python files in a specified directory and returns their tokens
+- `build_vocabulary(tokenized_data)`: Builds a dictionary mapping tokens to unique IDs
+- `convert_tokens_to_ids(tokenized_data, vocab)`: Converts tokens to corresponding numerical IDs using the vocabulary
+- `prepare_sequences(token_ids_data, sequence_length=4)`: Prepares training sequences of fixed length
 
-  ```
-  conda create --name lstm python=3.8
-  ```
+## Model Architecture Details
 
-- Activate the Conda environment
+### Embedding Layer
 
-  ```
-  conda activate lstm_env
-  ```
+- Input: Total vocabulary size and embedding dimensions (100 in this case)
 
-- Install necessary libraries
+### LSTM Layers
 
-  ```
-  pip install numpy pandas tensorflow keras matplotlib scikit-learn
-  ```
+- First layer (`return_sequences=True`): Captures patterns in sequences
+- Second layer: Condenses the sequence into a single representation
 
-- Install Jupyter Notebook inside the Conda environment (if not already installed)
+### Dropout Layer
 
-  ```
-  conda install -c conda-forge notebook
-  ```
+- Adds regularization by randomly deactivating neurons during training
 
-- Launch Jupyter Notebook
+### Dense Layer
 
-  ```
-  jupyter notebook
-  ```
+- Outputs probabilities for all words in the vocabulary using the softmax activation function
 
-## Project Structure
+## Dependencies
 
-- `data/`: Contains the text corpus and processed datasets
-- `models/`: Stores trained models and model-related scripts
-- `scripts/`: Contains data processing, training, and evaluation scripts
-- `tests/`: Unit tests for the project
-- `docs/`: Project documentation
+The following Python libraries are required:
 
-## Setup
+- `os` (for directory traversal)
+- `tokenize` (for tokenization of Python code)
+- `numpy` (for numerical operations)
+- `sklearn` (for splitting datasets)
+- `tensorflow` (for deep learning model creation and training)
+- `pickle` (for saving the tokenizer)
 
-1. Install Anaconda or Miniconda [here](https://docs.conda.io/en/latest/miniconda.html)
+### Installation
 
-2. Clone the repository:
-
-   ```
-   git clone https://github.com/Aniruddh-Kotecha/SSD-Team29-FinalProject.git
-   cd natural-language-prediction
-   ```
-
-3. Create a new Conda environment:
-
-   ```
-   conda env create -f environment.yml
-   ```
-
-4. Activate the Conda environment:
-   - Windows: `conda activate nlp-prediction`
-   - macOS/Linux: `source activate nlp-prediction`
+```bash
+pip install tensorflow numpy scikit-learn
+```
 
 ## Usage
 
-(To be added as the project progresses)
+### 1. Tokenize Python Files
 
-## Team
+```python
+directory_path = "Folder_name"
+tokenized_data = tokenize_directory(directory_path)
+```
+
+### 2. Build Vocabulary
+
+```python
+vocab = build_vocabulary(tokenized_data)
+```
+
+### 3. Prepare Training Data
+
+```python
+x, y = prepare_sequences(token_ids_data, sequence_length=4)
+```
+
+### 4. Train the Model
+
+```python
+history = model.fit(x_train, y_train, epochs=20, validation_data=(x_test, y_test), verbose=1)
+```
+
+### 5. Save the Model and Tokenizer
+
+```python
+model.save("Model_name.h5")
+with open('tokenizer.pickle', 'wb') as handle:
+    pickle.dump(vocab, handle, protocol=pickle.HIGHEST_PROTOCOL)
+```
+
+### 6. Predict the Next Word
+
+```python
+input_text = "for i in"
+next_word = predict_next_word_custom(model, input_text)
+print(f"Next Word Prediction: {next_word}")
+```
+
+## Project Highlights
+
+- **Dynamic Tokenization**: Handles Python code files of varying formats
+- **Self-Supervised Learning**: Learns word relationships from the code context itself
+- **Scalability**: Can be adapted for larger datasets and more complex architectures
+
+## Future Improvements
+
+- Use pre-trained embeddings like CodeBERT or CodeT5 for enhanced performance
+- Extend the model to handle other programming languages
+- Optimize the architecture using hyperparameter tuning
+
+## Example Output
+
+For the input sequence "for i in", the model might predict:
 
 ```
-1. Tanmai Shah
-2. Priyanshu Jha
-3. Ramachandran Moorthy
-4. Aniruddh Kotecha
+Next Word Prediction: range
 ```
+
+## Project Contributors
+
+### 1. Tanmai Shah
+
+### 2. Priyanshu Jha
+
+### 3. Ramachandran Moorthy
+
+### 4. Aniruddh Kotecha
